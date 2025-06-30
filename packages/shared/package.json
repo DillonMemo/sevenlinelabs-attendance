@@ -1,0 +1,51 @@
+{
+  "name": "@name/shared",
+  "version": "0.0.1",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./constants": {
+      "types": "./dist/constants/index.d.ts",
+      "require": "./dist/constants/index.js",
+      "import": "./dist/constants/index.mjs"
+    },
+    "./enums": {
+      "types": "./dist/enums/index.d.ts",
+      "require": "./dist/enums/index.js",
+      "import": "./dist/enums/index.mjs"
+    },
+     "./types": {
+      "types": "./dist/types/index.d.ts",
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "require": "./dist/utils/index.js",
+      "import": "./dist/utils/index.mjs"
+    }
+  },
+  "files": [
+    "dist/**"
+  ],
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rm -rf dist"
+  },
+  "publishConfig": {
+    "access": "private"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "tsup": "^8.0.0"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "name",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build:shared": "pnpm --filter @name/shared build",
+    "build:api": "pnpm --filter api build",
+    "build:web": "pnpm --filter web build",
+    "build": "pnpm build:shared && concurrently \"pnpm build:api\" \"pnpm build:web\"",
+    "dev": "pnpm build:shared && concurrently \"pnpm dev:api\" \"pnpm dev:web\"",
+    "dev:api": "pnpm --filter api start:dev",
+    "dev:web": "pnpm --filter web dev",
+    "lint": "eslint .",
+    "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\""
+  },
+  "author": "sevenlinelabs",
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "resolutions": {
+      "react": "19.0.0",
+      "react-dom": "19.0.0",
+      "typescript": "^5.8.2"
+    }
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "//": {
+    "start-readme": "pnpm install && pnpm build:shared && pnpm dev"
+  }
+}

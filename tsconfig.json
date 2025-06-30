@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@name/shared": ["packages/shared/src"],
+      "@name/shared/*": ["packages/shared/src/*"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "strict": true
+  },
+  "exclude": ["**/node_modules", "**/dist"]
+}
