@@ -26,6 +26,8 @@
     }
   },
   "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.50.2",
     "concurrently": "^9.1.2"
   },
   "devDependencies": {
