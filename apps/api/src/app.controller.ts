@@ -1,6 +1,7 @@
 import { Controller, Get, Logger, Req, UseGuards } from "@nestjs/common"
 import { AppService } from "./app.service"
 import { JwtAuthGuard } from "./feature/auth/auth.guard"
+import { type AuthUser } from "@supabase/supabase-js"
 
 @Controller()
 export class AppController {
@@ -13,12 +14,10 @@ export class AppController {
 
   @Get("/auth/protected")
   @UseGuards(JwtAuthGuard)
-  protected(@Req() req: Request): {
-    message: string
-  } {
-    Logger.log(`Authenticated user: ${JSON.stringify(req)}`)
-    return {
-      message: "AuthGuard works 🎉",
-    }
+  async protected(@Req() req: Request & { user: AuthUser }) {
+    Logger.log(`1️⃣`)
+    const response = await this.appService.Protected(req.user)
+    Logger.log(`AuthGuard works 🎉 ${JSON.stringify(response)}`)
+    return response
   }
 }

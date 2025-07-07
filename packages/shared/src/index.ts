@@ -1,1 +1,1 @@
-export const TEST = "TEST 입니당~ 🙏"
+export * from "./constants/title.constant"

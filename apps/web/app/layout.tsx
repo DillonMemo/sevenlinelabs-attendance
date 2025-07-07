@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 
 const pretendard = localFont({
-  src: "../../../assets/fonts/PretendardVariable.woff2",
+  src: "../assets/fonts/PretendardVariable.woff2",
   display: "swap",
   weight: "45 920",
   variable: "--font-pretendard",
@@ -21,8 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pretendard.className} w-screen h-screen`}>
-        <div className="md:p-8 p-4">{children}</div>
+      <body className={`${pretendard.className} w-screen h-screen dark`}>
+        <main className="min-h-dvh flex items-center justify-center">
+          {children}
+        </main>
       </body>
     </html>
   )

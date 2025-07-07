@@ -8,8 +8,8 @@ import { type Request } from "express"
 @Injectable()
 export class SupabaseStrategy extends PassportStrategy(Strategy) {
   public constructor(private readonly configService: ConfigService) {
-    const secret = configService.get<string>("JWT_SECRET_KEY")
-    if (!secret) throw new Error("JWT_SECRET_KEY is not defined")
+    const secret = configService.get<string>("SUPABASE_JWT_SECRET_KEY")
+    if (!secret) throw new Error("SUPABASE_JWT_SECRET_KEY is not defined")
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

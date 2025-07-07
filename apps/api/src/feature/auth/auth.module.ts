@@ -12,7 +12,7 @@ import { SupabaseStrategy } from "./strategies/supabase.strategy"
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         global: true,
-        secret: configService.get<string>("JWT_SECRET_KEY"),
+        secret: configService.get<string>("SUPABASE_JWT_SECRET_KEY"),
         signOptions: { expiresIn: "30m" },
       }),
       inject: [ConfigService],
