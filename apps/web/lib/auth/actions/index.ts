@@ -3,6 +3,20 @@
 import createServer from "@/lib/supabase/server"
 import { pick } from "lodash"
 import { AuthError } from "@supabase/supabase-js"
+import { NextRequest } from "next/server"
+
+/**
+ * Access token을 추출
+ * @param {NextRequest} request
+ * @returns {string | null}
+ */
+export async function extractAccessToken(request: NextRequest) {
+  const authHeader = request.headers.get("Authorization")
+  if (!authHeader) return null
+  const [type, token] = authHeader.split(" ")
+  if (type !== "Bearer" || !token) return null
+  return token
+}
 
 export async function singInWithEmailAndPassword(data: {
   email: string
