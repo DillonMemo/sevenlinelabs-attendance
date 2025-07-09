@@ -22,7 +22,7 @@ export async function GET() {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const todayISO = today.toISOString()
-
+  console.log("todayISO", todayISO)
   // 1. 모든 회원 정보 조회
   const { data: profiles } = await supabase
     .from("profiles")
