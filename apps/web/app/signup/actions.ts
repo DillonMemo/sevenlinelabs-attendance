@@ -9,11 +9,11 @@ export async function signup(formData: FormData) {
   // in practice, you should validate your inputs
   const data = {
     email: formData.get("email") as string,
-    password: formData.get("password") as string,
+    password: "Seven1104!",
     nickname: formData.get("nickname") as string,
   }
   const { error } = await singUpWithEmailAndPassword(data)
-  console.log("📌 signup", error)
+
   if (error) {
     return { error }
   }

@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get("token_hash")
   const type = searchParams.get("type") as EmailOtpType | null
   const next = "/"
-  console.log("confirm 1️⃣", { token_hash, type })
 
   // Create redirect link without the secret token
   const redirectTo = request.nextUrl.clone()
@@ -23,7 +22,6 @@ export async function GET(request: NextRequest) {
       type,
       token_hash,
     })
-    console.log("confirm 2️⃣", { data, error })
     if (!error) {
       redirectTo.searchParams.delete("next")
       return NextResponse.redirect(redirectTo)

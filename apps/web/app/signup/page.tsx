@@ -16,8 +16,8 @@ export default function SignupPage() {
     try {
       const result = await signup(formData)
       if (result.error) {
-        console.log("📌 result.error", result.error)
         setError(result.error.message)
+        throw new Error(result.error.message)
       }
     } catch (error) {
       console.error("Error sign up:", error)
@@ -48,16 +48,6 @@ export default function SignupPage() {
             type="email"
             className="border rounded-md px-2 text-sm"
             placeholder="Email"
-            required
-          />
-        </div>
-        <div className="inline-flex gap-2 items-center">
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            className="border rounded-md px-2 text-sm"
-            placeholder="Password"
             required
           />
         </div>

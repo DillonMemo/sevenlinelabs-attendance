@@ -11,7 +11,6 @@ export async function login(formData: FormData) {
     email: formData.get("email") as string,
     password: "Seven1104!",
   }
-  console.log("📌 login", data)
   const { error } = await singInWithEmailAndPassword(data)
   if (error) {
     return { error }

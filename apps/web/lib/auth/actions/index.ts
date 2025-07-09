@@ -27,7 +27,6 @@ export async function singInWithEmailAndPassword(data: {
     email: data.email,
     password: data.password,
   })
-  console.log("📌 singInWithEmailAndPassword", result)
 
   return result
 }
@@ -62,7 +61,6 @@ export async function singUpWithEmailAndPassword(data: {
     },
   })
 
-  console.log("📌 singUpWithEmailAndPassword", result)
   if (!result.error && result.data.user) {
     await supabase.from("profiles").insert([
       {

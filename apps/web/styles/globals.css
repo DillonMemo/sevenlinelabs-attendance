@@ -125,6 +125,14 @@
       transform: rotate(360deg);
     }
   }
+  @keyframes move-bg {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -80px 0; /* 원하는 만큼 이동 */
+    }
+  }
 
   * {
     @apply border-border outline-ring/50;
