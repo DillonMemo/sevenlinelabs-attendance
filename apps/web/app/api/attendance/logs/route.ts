@@ -102,7 +102,7 @@ export async function PUT(request: NextRequest) {
 
   // 알림 메시지 생성
   const message = `
-  ${data.user.user_metadata.nickname}님이 ${new Date().toLocaleString()}에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
+  ${data.user.user_metadata.nickname}님이 ${new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
   `
 
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
