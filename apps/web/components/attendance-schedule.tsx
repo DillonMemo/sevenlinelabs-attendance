@@ -33,6 +33,41 @@ export default function AttendanceSchedule({ user }: Props) {
   const headerScrollRef = useRef<HTMLDivElement>(null)
   const bodyScrollRef = useRef<HTMLDivElement>(null)
 
+  const fetchUsers = useCallback(async () => {
+    console.log("fetchUsers")
+    const supabase = createClient()
+    const { data } = await supabase.auth.getSession()
+    if (!data.session) return
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+      }
+    )
+    const result: UserResponse[] = await res.json()
+    setUsers(result)
+  }, [])
+  const fetchLogs = useCallback(async () => {
+    console.log("fetchLogs")
+    const supabase = createClient()
+    const { data } = await supabase.auth.getSession()
+
+    if (!data.session) return
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logs`,
+      {
+        method: "GET",
+      }
+    )
+    const result = await res.json()
+    setLogs(result)
+    setIsLoading(false)
+  }, [])
+
   // 시간 헤더 생성 (메모이제이션)
   const timeHeaders = useMemo(() => {
     return Array.from({ length: TOTAL_HOURS }, (_, i) => (
@@ -152,7 +187,7 @@ export default function AttendanceSchedule({ user }: Props) {
         setIsLoading(false)
       }
     },
-    []
+    [fetchLogs]
   )
 
   /**
@@ -163,7 +198,7 @@ export default function AttendanceSchedule({ user }: Props) {
     await supabase.auth.signOut()
 
     router.refresh()
-  }, [])
+  }, [router])
 
   // 스크롤 동기화
   const onHeaderScroll = useCallback(() => {
@@ -177,39 +212,6 @@ export default function AttendanceSchedule({ user }: Props) {
     }
   }, [])
 
-  const fetchUsers = useCallback(async () => {
-    const supabase = createClient()
-    const { data } = await supabase.auth.getSession()
-    if (!data.session) return
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${data.session.access_token}`,
-        },
-      }
-    )
-    const result: UserResponse[] = await res.json()
-    setUsers(result)
-  }, [])
-  const fetchLogs = useCallback(async () => {
-    const supabase = createClient()
-    const { data } = await supabase.auth.getSession()
-
-    if (!data.session) return
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logs`,
-      {
-        method: "GET",
-      }
-    )
-    const result = await res.json()
-    setLogs(result)
-    setIsLoading(false)
-  }, [])
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date())
@@ -220,13 +222,13 @@ export default function AttendanceSchedule({ user }: Props) {
     }
 
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchUsers, users.length])
 
   useEffect(() => {
     if (users.length > 0) {
       fetchLogs()
     }
-  }, [users])
+  }, [fetchLogs, users.length])
 
   return (
     <div className="mt-4 max-w-2xl flex flex-col gap-4">

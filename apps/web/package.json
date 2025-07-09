@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "pnpm install --filter @name/shared --no-frozen-lockfile && pnpm install --no-frozen-lockfile",
+    "build:shared": "pnpm --filter @name/shared... build",
+    "build": "pnpm build:shared && next build",
     "start": "next start",
     "lint": "next lint"
   },

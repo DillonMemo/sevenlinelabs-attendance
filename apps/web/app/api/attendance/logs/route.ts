@@ -91,7 +91,7 @@ export async function PUT(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get("type")
 
-  const { error, status } = await supabase.from("attendance_logs").insert([
+  const { error } = await supabase.from("attendance_logs").insert([
     {
       user_id: data.user.id,
       type,

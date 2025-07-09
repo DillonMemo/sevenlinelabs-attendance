@@ -1,11 +1,12 @@
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
-export default function ErrorPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function ErrorPage(props: Props) {
+  const searchParams = await props.searchParams
   const message = searchParams?.message
   return (
     <div className="flex flex-col gap-4 items-center">

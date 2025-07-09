@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   if (token_hash && type) {
     const supabase = await createServer()
-    const { data, error } = await supabase.auth.verifyOtp({
+    const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     })
