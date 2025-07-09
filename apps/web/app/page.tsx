@@ -1,6 +1,6 @@
 import AttendanceSchedule from "@/components/attendance-schedule"
 import createServer from "@/lib/supabase/server"
-import { MAIN_TITLE } from "@name/shared"
+import { MAIN_TITLE } from "@sevenlinelabs-attendance/shared"
 import { redirect } from "next/navigation"
 
 export default async function Home() {

@@ -1,9 +1,9 @@
 {
-  "name": "name",
+  "name": "sevenlinelabs-attendance",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:shared": "pnpm --filter @name/shared build",
+    "build:shared": "pnpm --filter @sevenlinelabs-attendance/shared build",
     "build:api": "pnpm --filter api build",
     "build:web": "pnpm --filter web build",
     "build": "pnpm build:shared && concurrently \"pnpm build:api\" \"pnpm build:web\"",

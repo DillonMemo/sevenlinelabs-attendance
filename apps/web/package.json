@@ -1,17 +1,17 @@
 {
-  "name": "web",
+  "name": "@sevenlinelabs-attendance/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "pnpm install --filter @name/shared --no-frozen-lockfile && pnpm install --no-frozen-lockfile",
-    "build:shared": "pnpm --filter @name/shared... build",
+    "prebuild": "pnpm install --filter @sevenlinelabs-attendance/shared --no-frozen-lockfile && pnpm install --no-frozen-lockfile",
+    "build:shared": "pnpm --filter @sevenlinelabs-attendance/shared... build",
     "build": "pnpm build:shared && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@name/shared": "workspace:*",
+    "@sevenlinelabs-attendance/shared": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.479.0",

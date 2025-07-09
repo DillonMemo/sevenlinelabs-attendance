@@ -2,8 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@name/shared": ["packages/shared/src"],
-      "@name/shared/*": ["packages/shared/src/*"]
+      "@sevenlinelabs-attendance/shared": ["packages/shared/src"],
+      "@sevenlinelabs-attendance/shared/*": ["packages/shared/src/*"]
     },
     "esModuleInterop": true,
     "skipLibCheck": true,
