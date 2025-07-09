@@ -32,7 +32,7 @@ export async function GET() {
     `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T00:00:00+09:00`
   )
   const todayISO = todayKST.toISOString()
-  console.log("todayISO", todayISO)
+
   // 1. 모든 회원 정보 조회
   const { data: profiles } = await supabase
     .from("profiles")
