@@ -16,10 +16,7 @@ export interface AttendanceLog {
   created_at?: string
 }
 
-export async function GET(request: NextRequest) {
-  const acceptLanguage = request.headers.get("accept-language") || ""
-  let timeZone = "Asia/Seoul"
-
+export async function GET() {
   const supabase = await createServer()
 
   const now = new Date()
