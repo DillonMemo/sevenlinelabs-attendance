@@ -34,7 +34,6 @@ export default function AttendanceSchedule({ user }: Props) {
   const bodyScrollRef = useRef<HTMLDivElement>(null)
 
   const fetchUsers = useCallback(async () => {
-    console.log("fetchUsers"
     const supabase = createClient()
     const { data } = await supabase.auth.getSession()
     if (!data.session) return
