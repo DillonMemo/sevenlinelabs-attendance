@@ -61,6 +61,15 @@ export async function GET() {
           checkOutData.timestamp && { endTime: checkOutData.timestamp }),
       }
 
+      if (
+        mergedData.startTime &&
+        mergedData.endTime &&
+        new Date(mergedData.endTime) < new Date(mergedData.startTime)
+      ) {
+        mergedData.endTime = undefined
+        mergedData.type = "check-in"
+      }
+
       return {
         ...mergedData,
         email: profile.email,
@@ -91,6 +100,35 @@ export async function PUT(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get("type")
 
+  // 알림 메시지 생성
+  const message = `
+  ${data.user.user_metadata.nickname}님이 ${new Date().toLocaleString()}에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
+  `
+
+  const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
+  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID as string
+
+  // 텔레그램 알림 전송
+  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
+    await fetch(telegramUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+      }),
+    })
+  }
+
+  // 슬랙 알림 전송
+  const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL as string
+  if (SLACK_WEBHOOK_URL) {
+    await fetch(SLACK_WEBHOOK_URL, {
+      method: "POST",
+      body: JSON.stringify({ text: message }),
+    })
+  }
+
   const { error } = await supabase.from("attendance_logs").insert([
     {
       user_id: data.user.id,
@@ -98,6 +136,7 @@ export async function PUT(request: NextRequest) {
       timestamp: new Date().toISOString(),
     },
   ])
+
   if (error) {
     return errorResponse(error.message, 500)
   }

@@ -338,6 +338,7 @@ export default function AttendanceSchedule({ user }: Props) {
                   >
                     {/* 배경 그리드 */}
                     <div className="absolute inset-0">{backgroundGrid}</div>
+
                     {log?.startTime && (
                       <div
                         className="absolute top-4 bottom-4 rounded-md flex items-center px-1 bg-teal-200 text-teal-900 overflow-hidden transition-all duration-1000"
