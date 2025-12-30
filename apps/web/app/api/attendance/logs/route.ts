@@ -20,18 +20,8 @@ export async function GET() {
   const supabase = await createServer()
 
   const now = new Date()
-  const kstDateString = now.toLocaleDateString("ko-KR", {
-    timeZone: "Asia/Seoul",
-  }) // 예: 2024. 7. 9.
-  // "2024. 7. 9." → "2024-07-09T00:00:00+09:00" 형태로 변환
-  const [year, month, day] = kstDateString
-    .replace(/\./g, "")
-    .split(" ")
-    .filter(Boolean)
-  const todayKST = new Date(
-    `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T00:00:00+09:00`
-  )
-  const todayISO = todayKST.toISOString()
+  const todayStart = now.setHours(0, 0, 0, 0)
+  const todayISO = new Date(todayStart).toISOString()
 
   // 1. 모든 회원 정보 조회
   const { data: profiles } = await supabase
