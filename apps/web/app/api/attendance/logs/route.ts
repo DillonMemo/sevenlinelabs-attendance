@@ -113,9 +113,6 @@ export async function PUT(request: NextRequest) {
 
   // 알림 메시지 생성 (사용자의 타임존으로 시간 표시)
   const now = new Date()
-  // const message = `
-  // ${data.user.user_metadata.nickname}님이 *${now.toLocaleString("en-US", { timeZone: clientTimezone })}*에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
-  // `
   const message =
     `${data.user.user_metadata.nickname} *${type === "check-in" ? "checked in" : "checked out"}* at ` +
     "`" +
@@ -123,30 +120,9 @@ export async function PUT(request: NextRequest) {
     ` (${clientTimezone})` +
     "`"
 
-  const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
-  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID as string
+  await sendTelegramMessage(message)
 
-  // 텔레그램 알림 전송
-  console.log("telegram", { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID })
-  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
-    await fetch(telegramUrl, {
-      method: "POST",
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-      }),
-    })
-  }
-
-  // 슬랙 알림 전송
-  const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL as string
-  if (SLACK_WEBHOOK_URL) {
-    await fetch(SLACK_WEBHOOK_URL, {
-      method: "POST",
-      body: JSON.stringify({ text: message }),
-    })
-  }
+  await sendSlackMessage(message)
 
   const { error } = await supabase.from("attendance_logs").insert([
     {
@@ -161,4 +137,38 @@ export async function PUT(request: NextRequest) {
   }
 
   return NextResponse.json({ ok: true })
+}
+
+/**
+ * @deprecated
+ * @description 텔레그램 알림 전송
+ */
+async function sendTelegramMessage(message: string) {
+  const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
+  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID as string
+
+  // 텔레그램 알림 전송
+  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
+    await fetch(telegramUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+      }),
+    })
+  }
+}
+
+/**
+ * @description 슬랙 알림 전송
+ */
+async function sendSlackMessage(message: string) {
+  const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL as string
+  if (SLACK_WEBHOOK_URL) {
+    await fetch(SLACK_WEBHOOK_URL, {
+      method: "POST",
+      body: JSON.stringify({ text: message }),
+    })
+  }
 }
