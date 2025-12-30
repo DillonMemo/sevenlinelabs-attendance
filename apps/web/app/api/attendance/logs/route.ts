@@ -109,19 +109,27 @@ export async function PUT(request: NextRequest) {
 
   const { searchParams } = new URL(request.url)
   const type = searchParams.get("type")
+  const clientTimezone = searchParams.get("timezone") || "Asia/Seoul"
 
-  // 알림 메시지 생성
-  const message = `
-  ${data.user.user_metadata.nickname}님이 ${new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
-  `
+  // 알림 메시지 생성 (사용자의 타임존으로 시간 표시)
+  const now = new Date()
+  // const message = `
+  // ${data.user.user_metadata.nickname}님이 *${now.toLocaleString("en-US", { timeZone: clientTimezone })}*에 ${type === "check-in" ? "출근" : "퇴근"} 했습니다.
+  // `
+  const message =
+    `${data.user.user_metadata.nickname} *${type === "check-in" ? "checked in" : "checked out"}* at ` +
+    "`" +
+    now.toLocaleString("en-US", { timeZone: clientTimezone }) +
+    ` (${clientTimezone})` +
+    "`"
 
   const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
   const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID as string
 
   // 텔레그램 알림 전송
+  console.log("telegram", { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID })
   if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
     const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
-    console.log("telegram", telegramUrl, TELEGRAM_CHAT_ID)
     await fetch(telegramUrl, {
       method: "POST",
       body: JSON.stringify({

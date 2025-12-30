@@ -168,8 +168,11 @@ export default function AttendanceSchedule({ user }: Props) {
         const { data } = await supabase.auth.getSession()
         if (!data.session) return
 
+        // 브라우저의 현재 타임존 자동 감지
+        const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logs?type=${type}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/attendance/logs?type=${type}&timezone=${encodeURIComponent(userTimezone)}`,
           {
             method: "PUT",
             headers: {
@@ -177,6 +180,7 @@ export default function AttendanceSchedule({ user }: Props) {
             },
           }
         )
+
         const result = await res.json()
         if (result.ok) await fetchLogs()
       } catch (error) {
