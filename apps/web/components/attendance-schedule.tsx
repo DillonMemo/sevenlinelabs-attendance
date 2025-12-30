@@ -201,10 +201,6 @@ export default function AttendanceSchedule({ user }: Props) {
   // 스크롤 동기화
   const onHeaderScroll = useCallback(() => {
     if (headerScrollRef.current && bodyScrollRef.current) {
-      console.log(
-        "headerScrollRef.current.scrollLeft",
-        headerScrollRef.current.scrollLeft
-      )
       bodyScrollRef.current.scrollLeft = headerScrollRef.current.scrollLeft
     }
   }, [])
