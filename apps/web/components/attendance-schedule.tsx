@@ -201,6 +201,10 @@ export default function AttendanceSchedule({ user }: Props) {
   // 스크롤 동기화
   const onHeaderScroll = useCallback(() => {
     if (headerScrollRef.current && bodyScrollRef.current) {
+      console.log(
+        "headerScrollRef.current.scrollLeft",
+        headerScrollRef.current.scrollLeft
+      )
       bodyScrollRef.current.scrollLeft = headerScrollRef.current.scrollLeft
     }
   }, [])
@@ -225,6 +229,11 @@ export default function AttendanceSchedule({ user }: Props) {
   useEffect(() => {
     if (users.length > 0) {
       fetchLogs()
+      if (headerScrollRef.current && bodyScrollRef.current) {
+        const hours = new Date().getHours() > 0 ? new Date().getHours() : 24
+        headerScrollRef.current.scrollLeft = (hours - 1) * HOUR_WIDTH
+        bodyScrollRef.current.scrollLeft = (hours - 1) * HOUR_WIDTH
+      }
     }
   }, [fetchLogs, users.length])
 

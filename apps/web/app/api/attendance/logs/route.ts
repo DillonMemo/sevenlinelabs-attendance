@@ -121,6 +121,7 @@ export async function PUT(request: NextRequest) {
   // 텔레그램 알림 전송
   if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
     const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
+    console.log("telegram", telegramUrl, TELEGRAM_CHAT_ID)
     await fetch(telegramUrl, {
       method: "POST",
       body: JSON.stringify({
