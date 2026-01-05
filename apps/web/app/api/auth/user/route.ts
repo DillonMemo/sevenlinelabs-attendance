@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     isCurrentUser: user.id === data?.user?.id,
   })) as User[]
 
-  const filteredUsers = mappedUsers.filter((user) => user.nickname !== "오준석")
+  // const filteredUsers = mappedUsers.filter((user) => user.nickname !== "오준석")
 
-  return NextResponse.json(filteredUsers)
+  return NextResponse.json(mappedUsers)
 }
