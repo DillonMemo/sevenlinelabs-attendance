@@ -322,7 +322,7 @@ export default function AttendanceSchedule({ user }: Props) {
                         {user.isCurrentUser && (
                           <Badge
                             variant="default"
-                            className="text-xs bg-transparent p-1 rounded-lg"
+                            className="text-xs bg-transparent px-1 py-0 rounded-lg"
                           >
                             ✨
                           </Badge>
