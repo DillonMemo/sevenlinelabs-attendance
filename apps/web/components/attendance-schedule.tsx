@@ -17,7 +17,7 @@ interface Props {
   user: User
 }
 
-// 상수 정의
+/** @description 상수 정의 */
 const HOUR_WIDTH = 80
 const TOTAL_HOURS = 24
 const TOTAL_WIDTH = TOTAL_HOURS * HOUR_WIDTH // 24시간 * 80px = 1920px
@@ -29,7 +29,7 @@ export default function AttendanceSchedule({ user }: Props) {
   const [users, setUsers] = useState<UserResponse[]>([])
   const [logs, setLogs] = useState<AttendanceLog[]>([])
 
-  // 스크롤 동기화를 위한 ref
+  /** @description 스크롤 동기화를 위한 ref */
   const headerScrollRef = useRef<HTMLDivElement>(null)
   const bodyScrollRef = useRef<HTMLDivElement>(null)
 
@@ -66,7 +66,7 @@ export default function AttendanceSchedule({ user }: Props) {
     setIsLoading(false)
   }, [])
 
-  // 시간 헤더 생성 (메모이제이션)
+  /** @description 시간 헤더 생성 (메모이제이션) */
   const timeHeaders = useMemo(() => {
     return Array.from({ length: TOTAL_HOURS }, (_, i) => (
       <div
@@ -88,7 +88,7 @@ export default function AttendanceSchedule({ user }: Props) {
     ))
   }, [])
 
-  // 시간을 픽셀 위치로 변환
+  /** @description 시간을 픽셀 위치로 변환 */
   const timeToPixel = useCallback((time: Date): number => {
     const hours = time.getHours()
     const minutes = time.getMinutes()
@@ -97,7 +97,7 @@ export default function AttendanceSchedule({ user }: Props) {
     return totalHours * HOUR_WIDTH
   }, [])
 
-  // 배경 그리드 생성
+  /** @description 배경 그리드 생성 */
   const backgroundGrid = useMemo(() => {
     const hourLines = Array.from(
       { length: TOTAL_HOURS + 1 },
@@ -129,7 +129,7 @@ export default function AttendanceSchedule({ user }: Props) {
     return [...hourLines, ...minuteMarks]
   }, [])
 
-  // 근무 시간 계산
+  /** @description 근무 시간 계산 */
   const calculateWorkDuration = useCallback((diffMs: number): string => {
     const diffMinutes = Math.floor(diffMs / (1000 * 60))
 
@@ -139,7 +139,7 @@ export default function AttendanceSchedule({ user }: Props) {
     return `${hours}시간 ${minutes}분`
   }, [])
 
-  // 근무 막대 데이터 계산
+  /** @description 근무 막대 데이터 계산 */
   const calculateWorkBarData = useCallback(
     (startTime: Date, endTime?: Date) => {
       if (!startTime) return { left: 0, width: 0, rightEnd: 0 }
@@ -237,8 +237,9 @@ export default function AttendanceSchedule({ user }: Props) {
     }
   }, [fetchLogs, users.length])
 
+  console.log("user", user)
   return (
-    <div className="mt-4 max-w-2xl flex flex-col gap-4">
+    <div className="mt-4 max-w-3xl flex flex-col gap-4">
       <div className="flex justify-center">
         {isLoading ? (
           <Button type="button" role="button" variant="ghost" disabled>
@@ -270,10 +271,10 @@ export default function AttendanceSchedule({ user }: Props) {
 
       <Card className="overflow-hidden">
         {/* 헤더 */}
-        <div className="bg-zinc-700 flex items-center">
+        <div className="bg-accent flex items-center">
           {/* 고정된 프로필 헤더 */}
-          <div className="md:w-48 w-32 h-16 flex-shrink-0 border-r border-b border-gray-200 flex items-center justify-center px-2">
-            <div className="text-sm font-medium text-gray-200">
+          <div className="md:w-48 w-32 h-16 flex-shrink-0 border-r border-b border-secondary-foreground flex items-center justify-center px-2">
+            <div className="text-sm font-medium text-foreground">
               시간대별 근무 현황
             </div>
           </div>
@@ -285,7 +286,7 @@ export default function AttendanceSchedule({ user }: Props) {
             onScroll={onHeaderScroll}
           >
             <div
-              className="flex h-16 border-b border-gray-200"
+              className="flex h-16 border-b border-secondary-foreground"
               style={{ width: TOTAL_WIDTH }}
             >
               {timeHeaders}
@@ -295,7 +296,12 @@ export default function AttendanceSchedule({ user }: Props) {
 
         {/* 콘텐츠 */}
         <div className="flex">
-          <div className="md:w-48 w-32 min-h-16 flex-shrink-0 border-r border-gray-200 divide-y divide-gray-100">
+          <div
+            className={cn(
+              "md:w-48 w-32 min-h-16 flex-shrink-0 bg-accent",
+              "border-r border-secondary-foreground divide-y divide-secondary-foreground"
+            )}
+          >
             {users.map((user) => {
               const log = logs.find((log) => log.user_id === user.id)
               const statusText =
@@ -312,15 +318,18 @@ export default function AttendanceSchedule({ user }: Props) {
                 <div key={`header-${user.id}`} className="p-4 h-20">
                   <div className="flex items-center space-x-3">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2">
-                        <p className="text-sm font-semibold text-white truncate">
-                          {user.nickname}
-                        </p>
+                      <div className="flex items-center">
                         {user.isCurrentUser && (
-                          <Badge variant="default" className="text-xs">
-                            본인
+                          <Badge
+                            variant="default"
+                            className="text-xs bg-transparent p-1 rounded-lg"
+                          >
+                            ✨
                           </Badge>
                         )}
+                        <p className="text-sm font-semibold text-foreground truncate">
+                          {user.nickname}
+                        </p>
                       </div>
                       <Badge variant="success" className="mt-1 text-xs">
                         {statusText}
