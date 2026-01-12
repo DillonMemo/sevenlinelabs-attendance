@@ -237,7 +237,6 @@ export default function AttendanceSchedule({ user }: Props) {
     }
   }, [fetchLogs, users.length])
 
-  console.log("user", user)
   return (
     <div className="mt-4 max-w-3xl flex flex-col gap-4">
       <div className="flex justify-center">
