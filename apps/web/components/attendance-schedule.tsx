@@ -252,7 +252,7 @@ export default function AttendanceSchedule({ user }: Props) {
             onClick={onClickInOut("check-out")}
           >
             <LogOut size={16} />
-            퇴근하기
+            Check out
           </Button>
         ) : logs.find((log) => log.user_id === user.id)?.type ===
           "check-out" ? (
@@ -263,7 +263,7 @@ export default function AttendanceSchedule({ user }: Props) {
             onClick={onClickInOut("check-in")}
           >
             <LogIn size={16} />
-            출근하기
+            Check in
           </Button>
         ) : null}
       </div>
@@ -274,7 +274,7 @@ export default function AttendanceSchedule({ user }: Props) {
           {/* 고정된 프로필 헤더 */}
           <div className="md:w-48 w-32 h-16 flex-shrink-0 border-r border-b border-secondary-foreground flex items-center justify-center px-2">
             <div className="text-sm font-medium text-foreground">
-              시간대별 근무 현황
+              Work status by time slot
             </div>
           </div>
 
@@ -305,13 +305,13 @@ export default function AttendanceSchedule({ user }: Props) {
               const log = logs.find((log) => log.user_id === user.id)
               const statusText =
                 log?.type === "check-out" && !log?.endTime
-                  ? "출근 전"
+                  ? "Before clock-in"
                   : log?.type === "check-in" && log.startTime
                     ? calculateWorkDuration(
                         currentTime.getTime() -
                           new Date(log.startTime).getTime()
                       )
-                    : "퇴근"
+                    : "Clocked out"
 
               return (
                 <div key={`header-${user.id}`} className="p-4 h-20">
@@ -422,7 +422,7 @@ export default function AttendanceSchedule({ user }: Props) {
           className="text-gray-300"
           onClick={onClickSignOut}
         >
-          로그아웃
+          Sign out
         </Button>
       </div>
     </div>
