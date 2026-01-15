@@ -12,7 +12,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-2 max-w-full md:px-0 px-4">
+    <div className="flex flex-col gap-2 max-w-full md:px-0 px-4 py-20">
       <h1 className="md:text-2xl text-xl font-bold text-center">
         {MAIN_TITLE}
       </h1>
