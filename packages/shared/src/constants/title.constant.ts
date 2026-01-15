@@ -1,1 +1,1 @@
-export const MAIN_TITLE = "SevenLine Labs"
+export const MAIN_TITLE = "Work Schedule"
