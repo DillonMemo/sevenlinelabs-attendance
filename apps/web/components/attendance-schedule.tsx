@@ -62,6 +62,7 @@ export default function AttendanceSchedule({ user }: Props) {
       }
     )
     const result = await res.json()
+    debugger
     setLogs(result)
     setIsLoading(false)
   }, [])

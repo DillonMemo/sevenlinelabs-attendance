@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import createServer from "@/lib/supabase/server"
 import { extractAccessToken } from "@/lib/auth/actions"
 import { errorResponse } from "@/lib/api/util"
-import { omit } from "lodash"
 
 export interface AttendanceLog {
   email: string
@@ -19,63 +18,57 @@ export interface AttendanceLog {
 export async function GET() {
   const supabase = await createServer()
 
-  const now = new Date()
-  const todayStart = now.setHours(0, 0, 0, 0)
-  const todayISO = new Date(todayStart).toISOString()
-
   // 1. 모든 회원 정보 조회
   const { data: profiles } = await supabase
     .from("profiles")
     .select("id, email, nickname")
   if (!profiles) return NextResponse.json([])
 
-  // 2. 각 회원별로 오늘의 최신 출근/퇴근 기록 조회
+  // 2. 각 회원별로 최신 출근/퇴근 기록 조회 (날짜 필터 없이)
   const logs: AttendanceLog[] = await Promise.all(
     profiles.map(async (profile) => {
-      const { data: checkInData } = await supabase
+      // 가장 최근 check-in
+      const { data: latestCheckIn } = await supabase
         .from("attendance_logs")
         .select("*")
         .eq("user_id", profile.id)
         .eq("type", "check-in")
-        .gte("timestamp", todayISO)
         .order("timestamp", { ascending: false })
         .limit(1)
         .single()
 
-      const { data: checkOutData } = await supabase
+      // 가장 최근 check-out
+      const { data: latestCheckOut } = await supabase
         .from("attendance_logs")
         .select("*")
         .eq("user_id", profile.id)
         .eq("type", "check-out")
-        .gte("timestamp", todayISO)
         .order("timestamp", { ascending: false })
         .limit(1)
         .single()
 
-      const mergedData = {
-        ...omit(checkInData, ["timestamp", "created_at"]),
-        ...omit(checkOutData, ["timestamp", "created_at"]),
-        ...(checkInData &&
-          checkInData.timestamp && { startTime: checkInData.timestamp }),
-        ...(checkOutData &&
-          checkOutData.timestamp && { endTime: checkOutData.timestamp }),
-      }
+      // 현재 상태 결정: check-in이 check-out보다 최근이면 "출근 중"
+      const isCurrentlyWorking =
+        latestCheckIn &&
+        (!latestCheckOut ||
+          new Date(latestCheckIn.timestamp) >
+            new Date(latestCheckOut.timestamp))
 
-      if (
-        mergedData.startTime &&
-        mergedData.endTime &&
-        new Date(mergedData.endTime) < new Date(mergedData.startTime)
-      ) {
-        mergedData.endTime = undefined
-        mergedData.type = "check-in"
-      }
+      // 출근 중이면 startTime 설정, 퇴근 완료면 둘 다 설정
+      const startTime = isCurrentlyWorking
+        ? latestCheckIn?.timestamp
+        : undefined
+      const endTime = isCurrentlyWorking ? undefined : latestCheckOut?.timestamp
 
       return {
-        ...mergedData,
+        id: latestCheckIn?.id || latestCheckOut?.id,
         email: profile.email,
         nickname: profile.nickname,
         user_id: profile.id,
-        type: mergedData?.type || "check-out",
+        type: isCurrentlyWorking ? "check-in" : "check-out",
+        startTime,
+        endTime,
+        memo: latestCheckIn?.memo || latestCheckOut?.memo,
       }
     })
   )
