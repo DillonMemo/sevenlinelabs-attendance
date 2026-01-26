@@ -54,10 +54,9 @@ export async function GET() {
           new Date(latestCheckIn.timestamp) >
             new Date(latestCheckOut.timestamp))
 
-      // 출근 중이면 startTime 설정, 퇴근 완료면 둘 다 설정
-      const startTime = isCurrentlyWorking
-        ? latestCheckIn?.timestamp
-        : undefined
+      // 출근 중이면 startTime만 설정, 퇴근 완료면 startTime과 endTime 둘 다 설정
+      // 퇴근 완료 시에도 해당 근무의 시작 시간(check-in)이 있어야 막대바를 그릴 수 있음
+      const startTime = latestCheckIn?.timestamp
       const endTime = isCurrentlyWorking ? undefined : latestCheckOut?.timestamp
 
       return {
