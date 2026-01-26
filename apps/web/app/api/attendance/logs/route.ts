@@ -54,9 +54,27 @@ export async function GET() {
           new Date(latestCheckIn.timestamp) >
             new Date(latestCheckOut.timestamp))
 
-      // 출근 중이면 startTime만 설정, 퇴근 완료면 startTime과 endTime 둘 다 설정
-      // 퇴근 완료 시에도 해당 근무의 시작 시간(check-in)이 있어야 막대바를 그릴 수 있음
-      const startTime = latestCheckIn?.timestamp
+      // 오늘 날짜인지 확인하는 함수
+      const isToday = (date: Date) => {
+        const today = new Date()
+        return (
+          date.getFullYear() === today.getFullYear() &&
+          date.getMonth() === today.getMonth() &&
+          date.getDate() === today.getDate()
+        )
+      }
+
+      // 퇴근 완료이고, 그 퇴근이 오늘이 아니면 막대바를 숨김
+      // (어제 check-out 완료한 사람은 오늘 막대바 안 보임)
+      // 단, 어제 check-in만 하고 check-out 안 한 사람은 막대바 유지 (isCurrentlyWorking = true)
+      const isCompletedOnPreviousDay =
+        !isCurrentlyWorking &&
+        latestCheckOut &&
+        !isToday(new Date(latestCheckOut.timestamp))
+
+      const startTime = isCompletedOnPreviousDay
+        ? undefined
+        : latestCheckIn?.timestamp
       const endTime = isCurrentlyWorking ? undefined : latestCheckOut?.timestamp
 
       return {
